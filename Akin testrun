@@ -1,0 +1,43 @@
+<?php
+// Define the API endpoint URL
+$endpoint = 'https://api.example.com/business/get-parent-business-id';
+
+// Define your API key (replace with your actual API key)
+$api_key = 'your_api_key_here';
+
+// Set up the cURL session
+$ch = curl_init($endpoint);
+
+// Set cURL options
+curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+curl_setopt($ch, CURLOPT_HTTPHEADER, [
+    'Authorization: Bearer ' . $api_key, // Include your API key in the request header
+]);
+
+// Execute the cURL session and get the response
+$response = curl_exec($ch);
+
+// Check for cURL errors
+if (curl_errno($ch)) {
+    echo 'cURL Error: ' . curl_error($ch);
+} else {
+    // Decode the JSON response
+    $data = json_decode($response, true);
+
+    // Check if the request was successful
+    if (isset($data['status']) && $data['status'] === 'success') {
+        // Access the data from the response
+        $parentBusinessId = $data['data']['parent_business_id'];
+
+        // Do something with the parent business ID
+        echo 'Parent Business ID: ' . $parentBusinessId;
+    } else {
+        // Handle the API error
+        echo 'API Error: ' . $data['message'];
+    }
+}
+
+// Close the cURL session
+curl_close($ch);
+?>
+
